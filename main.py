@@ -36,13 +36,6 @@ def tauhoanhapma():
         time.sleep(0.1)
 
 
-def loivaotiengioi(location):
-    time.sleep(2)
-    pyautogui.click(location)
-    time.sleep(2)
-    pyautogui.click(pyautogui.locateOnScreen('img\clicktiengioi.png', confidence=0.8))
-    time.sleep(2)
-    pyautogui.click(pyautogui.locateOnScreen('img\clickdituluyen.png', confidence=0.8))
 
 
 # Hàm tìm và nhấp vào hình ảnh trên màn hình
@@ -57,8 +50,7 @@ def click_image(target_image_path, confidence=0.8):
             elif 'tauhoa.png' or 'tauhoa1.png' in target_image_path:
                 pyautogui.click(location)
                 tauhoanhapma()
-            elif 'loivaotiengioi.png' in target_image_path:
-                loivaotiengioi(location)
+
             else:
                 pyautogui.click(location)
                 print(f"Clicked on image {target_image_path} at location: {location}")
@@ -67,7 +59,7 @@ def click_image(target_image_path, confidence=0.8):
             # print("Image not found on screen.")
             return False
     except Exception as e:
-        print(f"Error: {e}")
+        # print(f"Error: {e}")
         return False
 
 # Hàm tìm và nhấp vào văn bản trên màn hình
