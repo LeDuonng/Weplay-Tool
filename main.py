@@ -28,12 +28,13 @@ def preprocess_image(image):
     return gray
 
 def tauhoanhapma():
-    try:
-        while pyautogui.locateOnScreen('img\khacchetamma.png', confidence=0.8) is not None:
-            pyautogui.click(pyautogui.locateOnScreen('img\khacchetamma.png', confidence=0.8))
-            time.sleep(0.1)
-    except Exception as e:
-        print(f"Error: {e}")
+    location = None
+    while location is None:
+        location = pyautogui.locateOnScreen('img\khacchetamma.png', confidence=0.8)
+    for _ in range(20):
+        pyautogui.click(location)
+        time.sleep(0.1)
+
 
 def loivaotiengioi(location):
     time.sleep(2)
@@ -53,7 +54,7 @@ def click_image(target_image_path, confidence=0.8):
                 for target_text in target_texts:
                     if click_text(target_text):   
                         break   
-            elif 'tauhoa.png' in target_image_path:
+            elif 'tauhoa.png' or 'tauhoa1.png' in target_image_path:
                 pyautogui.click(location)
                 tauhoanhapma()
             elif 'loivaotiengioi.png' in target_image_path:
