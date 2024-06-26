@@ -2,3 +2,7 @@ opencv-python
 pyautogui
 pytesseract
 Pillow
+numpy
+matplotlib
+opencv-python-headless
+tk
