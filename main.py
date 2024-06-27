@@ -8,6 +8,7 @@ import time
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import threading
+import keyboard
 
 # Set the path to the Tesseract executable (update the path if needed)
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -24,7 +25,7 @@ def preprocess_image(image):
 def tauhoanhapma():
     location = None
     while location is None:
-        location = pyautogui.locateOnScreen('img/khacchetamma.png', confidence=0.8)
+        location = pyautogui.locateOnScreen('img/khacchetamma.png', confidence=0.8) 
     for _ in range(20):
         pyautogui.click(location)
         time.sleep(0.1)
@@ -38,7 +39,7 @@ def click_image(target_image_path, confidence=0.8):
                 for target_text in target_texts:
                     if click_text(target_text):
                         break
-            elif 'tauhoa.png' in target_image_path or 'tauhoa1.png' in target_image_path:
+            elif 'tauhoa.png' or 'tauhoa2.png' or 'tauhoa3.png' or 'tauhoa1.png' in target_image_path or 'tauhoa1.png' in target_image_path:
                 pyautogui.click(location)
                 tauhoanhapma()
             else:
@@ -57,11 +58,11 @@ def click_text(target_text, region=None):
         screenshot = pyautogui.screenshot(region=region)
         screenshot_np = np.array(screenshot)
         preprocessed_image = preprocess_image(screenshot_np)
-        cv2.imwrite('preprocessed_image.png', preprocessed_image)
+        # cv2.imwrite('preprocessed_image.png', preprocessed_image)
         text_data = pytesseract.image_to_data(preprocessed_image, output_type=pytesseract.Output.DICT, lang='eng')
         text_data['text'] = [text.encode('ascii', 'ignore').decode('utf-8') for text in text_data['text']]
-        with open('text_data.txt', 'w', encoding='utf-8') as file:
-            file.write(str(text_data))
+        # with open('text_data.txt', 'w', encoding='utf-8') as file:
+        #     file.write(str(text_data))
 
         for i, text in enumerate(text_data['text']):
             if i + 1 < len(text_data['text']):
@@ -77,6 +78,12 @@ def click_text(target_text, region=None):
     except Exception as e:
         print(f"Error: {e}")
         return False
+
+def auto_click_lixi():
+    global running 
+    running = True
+    while running:
+        click_image('img/lixi/lixi.png')
 
 def start_script():
     global running, target_texts
@@ -100,22 +107,46 @@ def run_script_in_thread():
     script_thread = threading.Thread(target=start_script)
     script_thread.start()
 
+def run_lixi_in_thread():
+    lixi_thread = threading.Thread(target=auto_click_lixi)
+    lixi_thread.start()    
+
 # GUI setup
 def create_gui():
     window = tk.Tk()
     window.title("Weplay AutoTool")
     
-    start_button = tk.Button(window, text="Bắt đầu", command=run_script_in_thread, padx=20, pady=10)
-    start_button.pack(pady=20)
-    
-    pause_button = tk.Button(window, text="Tạm dừng", command=stop_script, padx=20, pady=10)
-    pause_button.pack(pady=20)
-    
+    status_label = tk.Label(window, text="Status: Stopped", fg="red")
+    status_label.pack(pady=5)
+
+    def update_status_label():
+        global running
+        while True:
+            if running:
+                status_label.config(text="Status: Running", fg="green")
+            else:
+                status_label.config(text="Status: Stopped", fg="red")
+            time.sleep(0.1)
+
+    status_thread = threading.Thread(target=update_status_label)
+    status_thread.start()
+
+    start_button = tk.Button(window, text="Auto Click", command=run_script_in_thread, padx=20, pady=10)
+    start_button.pack(pady=5)
+
+    start_button = tk.Button(window, text="Lì xì", command=run_lixi_in_thread, padx=20, pady=10)
+    start_button.pack(pady=5)
+
+    pause_button = tk.Button(window, text="Tạm dừng (F12)", command=stop_script, padx=20, pady=10)
+    pause_button.pack(pady=5)
+    keyboard.add_hotkey('f12', stop_script)
+
     exit_button = tk.Button(window, text="Thoát", command=window.quit, padx=20, pady=10)
-    exit_button.pack(pady=20)
-    
-    window.geometry("+{}+{}".format(window.winfo_screenwidth() - window.winfo_reqwidth(), window.winfo_screenheight() - window.winfo_reqheight() - 150))
-    
+    exit_button.pack(pady=5)
+
+    window.geometry("+{}+{}".format(window.winfo_screenwidth() - window.winfo_reqwidth() - 150, window.winfo_screenheight() - window.winfo_reqheight() - 200))
+    window.geometry("300x270")
+
     window.mainloop()
 
 if __name__ == "__main__":
