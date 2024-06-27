@@ -103,16 +103,18 @@ def run_script_in_thread():
 # GUI setup
 def create_gui():
     window = tk.Tk()
-    window.title("Auto Clicker Script")
+    window.title("Weplay AutoTool")
     
-    start_button = tk.Button(window, text="Start Script", command=run_script_in_thread, padx=20, pady=10)
+    start_button = tk.Button(window, text="Bắt đầu", command=run_script_in_thread, padx=20, pady=10)
     start_button.pack(pady=20)
     
-    pause_button = tk.Button(window, text="Pause Script", command=stop_script, padx=20, pady=10)
+    pause_button = tk.Button(window, text="Tạm dừng", command=stop_script, padx=20, pady=10)
     pause_button.pack(pady=20)
     
-    exit_button = tk.Button(window, text="Exit", command=window.quit, padx=20, pady=10)
+    exit_button = tk.Button(window, text="Thoát", command=window.quit, padx=20, pady=10)
     exit_button.pack(pady=20)
+    
+    window.geometry("+{}+{}".format(window.winfo_screenwidth() - window.winfo_reqwidth(), window.winfo_screenheight() - window.winfo_reqheight() - 150))
     
     window.mainloop()
 
