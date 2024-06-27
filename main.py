@@ -10,18 +10,19 @@ from tkinter import filedialog, messagebox
 import threading
 import keyboard
 
-# Set the path to the Tesseract executable (update the path if needed)
+# Cài đặt đường dẫn cho Tesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# Set the TESSDATA_PREFIX environment variable
+# Cài biến môi trường cho Tesseract
 os.environ['TESSDATA_PREFIX'] = r'C:\Program Files\Tesseract-OCR'
 
-# Function to preprocess the image for better text recognition
+# Hàm xử lý hình ảnh trước khi nhận dạng
 def preprocess_image(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     return gray
 
+# Hàm nhận dạng và đánh tẩu hỏa nhập ma
 def tauhoanhapma():
     location = None
     while location is None:
@@ -30,7 +31,7 @@ def tauhoanhapma():
         pyautogui.click(location)
         time.sleep(0.1)
 
-# Function to click on an image on the screen
+# Hàm click vào hình ảnh trên màn hình
 def click_image(target_image_path, confidence=0.8):
     try:
         location = pyautogui.locateOnScreen(target_image_path, confidence=confidence)
@@ -52,7 +53,7 @@ def click_image(target_image_path, confidence=0.8):
         print(f"Error: {e}")
         return False
 
-# Function to click on text on the screen
+# Hàm nhận dạng và click vào văn bản trên màn hình
 def click_text(target_text, region=None):
     try:
         screenshot = pyautogui.screenshot(region=region)
@@ -79,12 +80,14 @@ def click_text(target_text, region=None):
         print(f"Error: {e}")
         return False
 
+# Hàm tự động click vào hình ảnh lì xì
 def auto_click_lixi():
     global running 
     running = True
     while running:
         click_image('img/lixi/lixi.png')
 
+# Hàm chạy script tự động
 def start_script():
     global running, target_texts
     target_texts = []
@@ -99,19 +102,22 @@ def start_script():
                     break
         time.sleep(1)  # Prevent the script from running too fast
 
+# Hàm dừng script tự động
 def stop_script():
     global running
     running = False
 
+# Hàm chạy script tự động trong một thread
 def run_script_in_thread():
     script_thread = threading.Thread(target=start_script)
     script_thread.start()
 
+# Hàm chạy Lì xì trong một thread
 def run_lixi_in_thread():
     lixi_thread = threading.Thread(target=auto_click_lixi)
     lixi_thread.start()    
 
-# GUI setup
+# Hàm tạo giao diện
 def create_gui():
     window = tk.Tk()
     window.title("Weplay AutoTool")
