@@ -36,11 +36,12 @@ def click_image(target_image_path, confidence=0.8):
     try:
         location = pyautogui.locateOnScreen(target_image_path, confidence=confidence)
         if location:
-            if 'phieuluu.png' in target_image_path:
-                for target_text in target_texts:
-                    if click_text(target_text):
-                        break
-            elif 'tauhoa.png' or 'tauhoa2.png' or 'tauhoa3.png' or 'tauhoa1.png' in target_image_path or 'tauhoa1.png' in target_image_path:
+            # if 'phieuluu2.png' in target_image_path:
+            #     os.system("start nofi.mp3")
+            #     for target_text in target_texts:
+            #         if click_text(target_text):
+            #             break
+            if 'tauhoa.png' or 'tauhoa2.png' or 'tauhoa3.png' or 'tauhoa1.png' in target_image_path:
                 pyautogui.click(location)
                 tauhoanhapma()
             else:
@@ -50,7 +51,7 @@ def click_image(target_image_path, confidence=0.8):
         else:
             return False
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error image: {e}")
         return False
 
 # Hàm nhận dạng và click vào văn bản trên màn hình
@@ -77,7 +78,7 @@ def click_text(target_text, region=None):
 
         return False
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error text: {e}")
         return False
 
 # Hàm tự động click vào hình ảnh lì xì
@@ -137,11 +138,13 @@ def create_gui():
     status_thread = threading.Thread(target=update_status_label)
     status_thread.start()
 
-    start_button = tk.Button(window, text="Auto Click", command=run_script_in_thread, padx=20, pady=10)
+    start_button = tk.Button(window, text="Auto Click (F9)", command=run_script_in_thread, padx=20, pady=10)
     start_button.pack(pady=5)
+    keyboard.add_hotkey('f9', run_script_in_thread)
 
-    start_button = tk.Button(window, text="Lì xì", command=run_lixi_in_thread, padx=20, pady=10)
+    start_button = tk.Button(window, text="Lì xì (F10)", command=run_lixi_in_thread, padx=20, pady=10)
     start_button.pack(pady=5)
+    keyboard.add_hotkey('f10', run_lixi_in_thread)
 
     pause_button = tk.Button(window, text="Tạm dừng (F12)", command=stop_script, padx=20, pady=10)
     pause_button.pack(pady=5)
