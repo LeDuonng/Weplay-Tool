@@ -36,8 +36,9 @@ def click_image(target_image_path, confidence=0.8):
     try:
         location = pyautogui.locateOnScreen(target_image_path, confidence=confidence)
         if location:
-            # if 'phieuluu2.png' in target_image_path:
-            #     os.system("start nofi.mp3")
+            if 'phieuluu2.png' in target_image_path:
+                os.system("start nofi.mp3")
+                return False
             #     for target_text in target_texts:
             #         if click_text(target_text):
             #             break
@@ -110,11 +111,13 @@ def stop_script():
 
 # Hàm chạy script tự động trong một thread
 def run_script_in_thread():
+    stop_script()
     script_thread = threading.Thread(target=start_script)
     script_thread.start()
 
 # Hàm chạy Lì xì trong một thread
 def run_lixi_in_thread():
+    stop_script()
     lixi_thread = threading.Thread(target=auto_click_lixi)
     lixi_thread.start()    
 
@@ -123,17 +126,18 @@ def create_gui():
     window = tk.Tk()
     window.title("Weplay AutoTool")
     
-    status_label = tk.Label(window, text="Status: Stopped", fg="red")
+    status_label = tk.Label(window, text="Status: Stopped", fg="red", font=("Arial", 16, "bold"))
     status_label.pack(pady=5)
 
     def update_status_label():
         global running
         while True:
             if running:
-                status_label.config(text="Status: Running", fg="green")
+                status_label.config(text="Status: Running", fg="green", font=("Arial", 16, "bold"))
             else:
-                status_label.config(text="Status: Stopped", fg="red")
+                status_label.config(text="Status: Stopped", fg="red", font=("Arial", 16, "bold"))
             time.sleep(0.1)
+    
 
     status_thread = threading.Thread(target=update_status_label)
     status_thread.start()
