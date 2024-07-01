@@ -38,11 +38,11 @@ def click_image(target_image_path, confidence=0.8):
         if location:
             if 'phieuluu2.png' in target_image_path:
                 os.system("start nofi.mp3")
+                for target_text in target_texts:
+                    if click_text(target_text):
+                        break
                 return False
-            #     for target_text in target_texts:
-            #         if click_text(target_text):
-            #             break
-            if 'tauhoa.png' or 'tauhoa2.png' or 'tauhoa3.png' or 'tauhoa1.png' in target_image_path:
+            elif 'tauhoa.png' or 'tauhoa2.png' or 'tauhoa3.png' or 'tauhoa1.png' in target_image_path:
                 pyautogui.click(location)
                 tauhoanhapma()
             else:
